@@ -1,0 +1,6 @@
+Navbar
+-Apply stick header to all pages
+
+Footer
+-Adjust links for all pages
+-Set copyright for all pages
