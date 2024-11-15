@@ -1,0 +1,56 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+
+{% block body %}
+            <!-- Projects Section-->
+            <section class="py-5">
+                <div class="container px-5 mb-5">
+                    <div class="text-center mb-5">
+                        <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
+                    </div>
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            <!-- Project Card 1-->
+                            <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
+                                <div class="card-body p-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-5">
+                                            <h2 class="fw-bolder">Wthrbash</h2>
+                                            <p>My first program was a Linux Bash script to get the current tempurature
+                                                and return back if it was too cold to wear chaco sandals.
+                                            </p>
+                                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="https://github.com/arkterra90/wthrbsh">Wthrbash Repo</a> 
+                                        </div>
+                                        <img class="img-fluid" src="{% static 'assets/wthrbsh2.jpg' %}" alt="..." />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Project Card 2-->
+                            <div class="card overflow-hidden shadow rounded-4 border-0">
+                                <div class="card-body p-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-5">
+                                            <h2 class="fw-bolder">Yard Water</h2>
+                                            <p>Yard Water is a web app utilizing Flask, HTML, Bootstrap CSS, SQLite3, Python, and Jinja allowing a user to understand in real-time the watering needs of their yard based on historical weather data, geolocation, and grass type.</p>
+                                            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder" href="https://github.com/arkterra90/Yard_Water">Yard Water Repo</a> 
+                                        </div>
+                                        <img class="img-fluid" src="{% static 'assets/Yard_water1-2.jpg' %}" alt="..." />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Call to action section-->
+            <section class="py-5 bg-gradient-primary-to-secondary text-white">
+                <div class="container px-5 my-5">
+                    <div class="text-center">
+                        <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
+                        <!--<a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" href="contact.html">Contact me</a>-->
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Footer-->
+{% endblock %}
