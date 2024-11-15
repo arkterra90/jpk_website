@@ -1,0 +1,44 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+{% block body %}
+
+<div style="height: 100px;"></div>
+
+<div class="container mt-5">
+    <!-- Blog Post Header -->
+    <header>
+        <h1 class="display-4">{{ post.title|title }}</h1>
+        <p class="text-muted">
+            <span>By {{ post.author }}</span> |
+            <span>{{ post.dateMade|date:"F d, Y" }}</span>
+        </p>
+    </header>
+    
+    <!-- Blog Post Image -->
+    {% if post.photo %}
+    <div class="text-center my-4">
+        <img src="{{ post.photo.url }}" alt="Image of {{ post.title }}" class="img-fluid rounded">
+    </div>
+    {% endif %}
+
+    <!-- Blog Post Content -->
+    <article class="blog-post-text mb-4">
+        {{ post.text|linebreaks }}
+    </article>
+
+    <div class="divider" style="border-bottom: 1px solid black; padding-top: 10px; padding-bottom: 10px;"></div>
+
+    <!-- SEO: Related Reads Section -->
+    <section class="related-reads mt-4">
+        <h2>Related Reads</h2>
+        <ul class="list-unstyled">
+            {% for entry in other_entries %}
+            <li class="mb-2">
+                <a href="{% url 'website:blogEntry' postID=entry.id %}" class="text-decoration-none">{{ entry.title|title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+{% endblock %}

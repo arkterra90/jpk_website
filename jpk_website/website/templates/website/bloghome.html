@@ -1,0 +1,30 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+{% block body %}
+
+<main class="container mt-5">
+    <div class="row">
+        {% for entry in BlogEntries %}
+            <div class="col-md-4 mb-4">
+                <article class="card h-100">
+                    {% if entry.blogPhoto %}
+                        <img src="{{ entry.photo.url }}" class="card-img-top" alt="Blog post image: {{ entry.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ entry.blogTitle }}</h5>
+                        <p class="card-text">{{ entry.blogText|truncatewords:20 }}</p>
+                        <a href="{% url 'website:blogPost' postID=entry.id %}" class="btn btn-primary" style="background-color: #333333; color: white; border-color: #292929;">Read More</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Posted on <time datetime="{{ entry.dateMade|date:"Y-m-d" }}">{{ entry.blogDate|date:"F d, Y" }}</time> by {{ entry.blogAuthor }}
+                    </div>
+                </article>
+            </div>
+        {% empty %}
+            <p class="text-center">No blog entries found.</p>
+        {% endfor %}
+    </div>
+</main>
+
+
+{% endblock %}
