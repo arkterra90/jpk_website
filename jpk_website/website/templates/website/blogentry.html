@@ -34,7 +34,7 @@
         <ul class="list-unstyled">
             {% for entry in other_entries %}
             <li class="mb-2">
-                <a href="{% url 'website:blogPost' postID=entry.id %}" class="text-decoration-none">{{ entry.blogTitles|title }}</a>
+                <a href="{% url 'website:blogPost' postID=entry.id %}" class="text-decoration-none">{{ entry.blogTitle|title }}</a>
             </li>
             {% endfor %}
         </ul>
