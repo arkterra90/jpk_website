@@ -10,3 +10,7 @@ class SubscriberForm(forms.ModelForm):
             'nameLast': 'Last Name',
             'subEmail': 'Email Address',
         }
+
+class EmailForm(forms.Form):
+    subject = forms.CharField(max_length=255, required=True, label="Email Subject")
+    message = forms.CharField(widget=forms.Textarea, required=True, label="Email Message")

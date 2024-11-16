@@ -1,0 +1,28 @@
+<div class="row gx-5">
+    {% for entry in BlogEntries %}
+        <div class="col-md-4 mb-4">
+            <article class="card h-100 shadow-lg border-0">
+                {% if entry.blogPhoto %}
+                    <div class="square-image">
+                        <img src="{{ entry.blogPhoto.url }}" class="card-img-top" alt="{{ entry.blogTitle }}">
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ entry.blogTitle }}</h5>
+                    <p class="card-text">{{ entry.blogText|truncatewords:20 }}</p>
+                    <a href="{% url 'website:blogPost' postID=entry.id %}" class="btn btn-outline-dark">Read More</a>
+                </div>
+                <div class="card-footer text-muted">
+                    <div>Posted on <time datetime="{{ entry.blogDate|date:'Y-m-d' }}">{{ entry.blogDate|date:'F d, Y' }}</time></div>
+                    <div>by {{ entry.blogAuthor }}</div>
+                </div>
+                
+            </article>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">No blog entries found for this tag. Try another one!</p>
+        </div>
+    {% endfor %}
+</div>

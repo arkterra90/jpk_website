@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import BlogEntry
 from .forms import SubscriberForm
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 
 def index(request):
@@ -28,12 +30,31 @@ def subscribe(request):
         return render(request, "website/subscribe.html", {'form': form})
 
 def blogHome(request):
-
-    #Queries for all blog entries to give a listing on the blogHome page.
     BlogEntries = BlogEntry.objects.all().order_by('-blogDate')
-    Context = {'BlogEntries': BlogEntries}
 
-    return render(request, "website/bloghome.html", Context)
+    # Extract unique tags for dropdown
+    unique_tags = set(
+        tag.strip()
+        for entry in BlogEntries
+        for tag in entry.blogTag.split(",")
+        if tag.strip()
+    )
+
+    # Filter based on selected tag
+    selected_tag = request.GET.get('tag')
+    if selected_tag:
+        BlogEntries = BlogEntries.filter(blogTag__icontains=selected_tag)
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        # For AJAX requests, return only the blog entries
+        html = render_to_string("website/partials/blog_list.html", {"BlogEntries": BlogEntries})
+        return JsonResponse({"html": html})
+
+    # For normal requests, render the full page
+    return render(request, "website/bloghome.html", {
+        "BlogEntries": BlogEntries,
+        "unique_tags": sorted(unique_tags),
+    })
     
 
 def blogPost(request, postID):

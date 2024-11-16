@@ -125,3 +125,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Email Backend
+
+# Email Backend Configuration for Gmail
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # Gmail SMTP server
+EMAIL_PORT = 587  # SMTP port for TLS
+EMAIL_USE_TLS = True  # Use TLS for secure connection
+EMAIL_HOST_USER = "jer.kuehn@gmail.com"  # Replace with your Gmail address
+EMAIL_HOST_PASSWORD = "cber rxtb rbjj wucq"  # Replace with your Gmail app password
+
+# Media file settings
+MEDIA_URL = '/media/'  # URL prefix for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Top-level directory to store media files

@@ -153,6 +153,7 @@
 <!-- Blog Section -->
 <section class="bg-light py-5">
     <div class="container px-5">
+        <!-- Blog Header -->
         <div class="row gx-5 justify-content-center">
             <div class="col-xxl-8">
                 <div class="text-center my-5">
@@ -165,30 +166,36 @@
                 </div>
             </div>
         </div>
-        <div class="row gx-5">
-            {% for entry in BlogEntries %}
-                <div class="col-md-4 mb-4">
-                    <article class="card h-100 shadow-lg border-0">
-                        {% if entry.photo %}
-                            <img src="{{ entry.blogPhoto.url }}" class="card-img-top" alt="{{ entry.blogTitle }}">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ entry.blogTitle }}</h5>
-                            <p class="card-text">{{ entry.blogText|truncatewords:20 }}</p>
-                            <a href="{% url 'website:blogPost' postID=entry.id %}" class="btn btn-outline-dark">Read More</a>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Posted on <time datetime="{{ entry.dateMade|date:'Y-m-d' }}">{{ entry.dateMade|date:'F d, Y' }}</time> by {{ entry.blogAuthor }}
-                        </div>
-                    </article>
+
+        <!-- Tag Filter Dropdown -->
+        <div class="row gx-5 justify-content-center mb-4">
+            <div class="col-xxl-8 text-center">
+                <div class="dropdown d-inline-block">
+                    <button
+                    class="btn btn-outline-dark dropdown-toggle"
+                    type="button"
+                    id="tagDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                        Filter by Tags
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="tagDropdown">
+                        <li><a class="dropdown-item tag-filter" href="#" data-tag="">All</a></li>
+                        {% for tag in unique_tags %}
+                            <li><a class="dropdown-item tag-filter" href="#" data-tag="{{ tag }}">{{ tag }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">No blog entries found. Stay tuned for updates!</p>
-                </div>
-            {% endfor %}
+            </div>
+        </div>
+
+        <!-- Blog Entries -->
+        <div id="blog-container">
+            {% include "website/partials/blog_list.html" %}
         </div>
     </div>
 </section>
+
+
 
 {% endblock %}

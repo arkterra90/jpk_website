@@ -1,0 +1,16 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Send Email to Subscribers</h1>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="apply" value="1">
+    <button type="submit" class="button default">Send Email</button>
+</form>
+<h2>Selected Subscribers</h2>
+<ul>
+    {% for subscriber in subscribers %}
+        <li>{{ subscriber.nameFirst }} {{ subscriber.nameLast }} ({{ subscriber.subEmail }})</li>
+    {% endfor %}
+</ul>
+<a href="..">Back to Subscriber List</a>
+{% endblock %}

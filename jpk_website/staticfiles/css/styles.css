@@ -10,6 +10,109 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+ /* Navbar styles */
+
+ /* Default (Light Mode) Styles */
+body {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.navbar {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.navbar a.nav-link {
+    color: #333333;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    color: #333333;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #f8f9fa;
+}
+
+body.dark-mode .navbar {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+}
+
+body.dark-mode .navbar a.nav-link {
+    color: #f8f9fa;
+}
+
+body.dark-mode .footer {
+    background-color: #1e1e1e;
+    color: #f8f9fa;
+}
+
+.navbar {
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Brand logo and text spacing */
+.navbar-brand img {
+  height: 40px;
+  width: auto;
+}
+
+/* Navbar links hover and active states */
+.navbar-nav .nav-link {
+  color: #333333; /* Default link color */
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #0056b3; /* Hover color */
+}
+
+.navbar-nav .nav-link.active {
+  color: #ffffff;
+  background-color: #0d6efd; /* Bootstrap primary color */
+  border-radius: 5px;
+  padding: 5px 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Toggler styles for mobile */
+.navbar-toggler {
+  border-color: #0d6efd; /* Match primary color */
+}
+
+.navbar-toggler:hover {
+  background-color: #0d6efd; /* Toggler hover color */
+  border-color: #0d6efd;
+}
+
+/* Button styling for the call-to-action */
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker hover state */
+  border-color: #0056b3;
+}
+
+/* Responsive padding adjustments */
+.navbar .container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.navbar-nav {
+  align-items: center;
+}
+
 :root {
   --bs-blue: #1e30f3;
   --bs-indigo: #6610f2;
