@@ -8,5 +8,6 @@ urlpatterns = [
     path("resume/", views.resume, name="resume"),
     path("projects/", views.projects, name="projects"),
     path("blogHome/", views.blogHome, name="blogHome"),
-    path("blogPost/<int:postID>/", views.blogPost, name="blogPost")
+    path("blogPost/<int:postID>/", views.blogPost, name="blogPost"),
+    path("subscribe", views.subscribe, name="subscribe")
 ]
