@@ -24,6 +24,9 @@ urlpatterns = [
     path('', include('website.urls')), #URLs from website app
 ]
 
+# Custom error handlers
+handler404 = 'website.views.custom_404'
+
 # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
