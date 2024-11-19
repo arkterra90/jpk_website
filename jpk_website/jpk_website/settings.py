@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'ckeditor',
     'django_distill',
     'website',
     'django.contrib.admin',
@@ -140,3 +141,11 @@ EMAIL_HOST_PASSWORD = "cber rxtb rbjj wucq"  # Replace with your Gmail app passw
 # Media file settings
 MEDIA_URL = '/media/'  # URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Top-level directory to store media files
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 400,
+        'width': '100%',
+    },
+}

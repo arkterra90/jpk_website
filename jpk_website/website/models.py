@@ -1,16 +1,43 @@
 from django.db import models
 from django.utils.timezone import now
+from PIL import Image
 
-# Model representing a blog entry
+
+from ckeditor.fields import RichTextField
+
 class BlogEntry(models.Model):
     blogDate = models.DateTimeField()  # Date and time of the blog post
     blogAuthor = models.CharField(max_length=255)  # Name of the blog author
     blogTitle = models.CharField(max_length=255)  # Title of the blog post
     blogTag = models.CharField(max_length=255)  # Comma-separated tags for the blog post
-    blogText = models.TextField()  # Main content of the blog post
+    blogText = RichTextField()  # Main content of the blog post with CKEditor
     blogPhoto = models.ImageField(
         upload_to='blog_photos/', null=True, blank=True
     )  # Optional photo associated with the blog post
+    blogPublic = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Call the parent class's save method first to handle initial saving
+        super().save(*args, **kwargs)
+
+        # Check if there's a photo and process it
+        if self.blogPhoto:
+            # Open the uploaded image
+            image_path = self.blogPhoto.path
+            img = Image.open(image_path)
+
+            # Check if the image height exceeds 1080px
+            if img.height > 1080:
+                # Calculate the new width while maintaining aspect ratio
+                aspect_ratio = img.width / img.height
+                new_height = 1080
+                new_width = int(new_height * aspect_ratio)
+
+                # Resize the image
+                img = img.resize((new_width, new_height), Image.LANCZOS)  # Use LANCZOS instead of ANTIALIAS
+
+                # Save the resized image back to the same path
+                img.save(image_path)
 
     def __str__(self):
         """

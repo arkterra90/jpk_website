@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .models import BlogEntry
 from .forms import SubscriberForm
+from django.db.models import Q
+
 
 # View for rendering the home page
 def index(request):
@@ -35,12 +37,11 @@ def subscribe(request):
         form = SubscriberForm()
         return render(request, "website/subscribe.html", {'form': form})
 
-# View for displaying the blog home page with filtering and AJAX support
 def blogHome(request):
-    # Fetch all blog entries, ordered by date (most recent first)
-    BlogEntries = BlogEntry.objects.all().order_by('-blogDate')
+    # Fetch all public blog entries, ordered by date (most recent first)
+    BlogEntries = BlogEntry.objects.filter(blogPublic=True).order_by('-blogDate')
 
-    # Extract unique tags for filtering
+    # Extract unique tags for filtering from public blog entries
     unique_tags = set(
         tag.strip()
         for entry in BlogEntries
@@ -66,16 +67,17 @@ def blogHome(request):
 
 # View for displaying a single blog post
 def blogPost(request, postID):
-    # Fetch the blog post by ID or return a 404 error if not found
-    entry = get_object_or_404(BlogEntry, id=postID)
+    # Fetch the public blog post by ID or return a 404 error if not found
+    entry = get_object_or_404(BlogEntry, id=postID, blogPublic=True)
 
-    # Fetch the 10 most recent blog posts excluding the current one
-    other_entries = BlogEntry.objects.exclude(id=postID).order_by('-blogDate')[:10]
+    # Fetch the 10 most recent public blog posts excluding the current one
+    other_entries = BlogEntry.objects.filter(blogPublic=True).exclude(id=postID).order_by('-blogDate')[:10]
 
     return render(request, "website/blogentry.html", {
         'post': entry,
         'other_entries': other_entries,
     })
+
 
 # Custom 404 error handler view
 def custom_404(request, exception):

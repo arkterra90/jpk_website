@@ -10,7 +10,7 @@
 
                 <div class="card-body">
                     <h5 class="card-title">{{ entry.blogTitle }}</h5>
-                    <p class="card-text">{{ entry.blogText|truncatewords:20 }}</p>
+                    <p class="card-text">{{ entry.blogText|truncatewords:20|safe }}</p>
                     <a href="{% url 'website:blogPost' postID=entry.id %}" class="btn btn-outline-dark">Read More</a>
                 </div>
                 <div class="card-footer text-muted">

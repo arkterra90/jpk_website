@@ -7,6 +7,24 @@ from django.core.mail import send_mass_mail
 from django.urls import path
 from django.shortcuts import render
 from django.contrib import messages
+from ckeditor.widgets import CKEditorWidget
+from django import forms
+
+# Custom form for BlogEntry to use CKEditor for the blogText field
+class BlogEntryAdminForm(forms.ModelForm):
+    blogText = forms.CharField(widget=CKEditorWidget())  # Replace TextField with CKEditor
+
+    class Meta:
+        model = BlogEntry
+        fields = '__all__'
+
+# Admin class for BlogEntry with CKEditor integration
+@admin.register(BlogEntry)
+class BlogEntryAdmin(admin.ModelAdmin):
+    form = BlogEntryAdminForm  # Use the custom form with CKEditor
+    list_display = ('blogTitle', 'blogAuthor', 'blogDate')
+    search_fields = ('blogTitle', 'blogAuthor', 'blogTag')
+    list_filter = ('blogDate',)
 
 # Action: Export selected subscribers as a CSV file
 @admin.action(description="Export selected subscribers as CSV")
@@ -88,9 +106,6 @@ class SubscriberAdmin(admin.ModelAdmin):
             ),
         ]
         return custom_urls + urls
-
-# Register the BlogEntry model in the admin panel
-admin.site.register(BlogEntry)
 
 # Register the Subscriber model with the custom SubscriberAdmin class
 admin.site.register(Subscriber, SubscriberAdmin)
