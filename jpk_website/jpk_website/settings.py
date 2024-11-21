@@ -130,12 +130,23 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+# DigitalOcean Spaces settings
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # Set this in your environment variables
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # Set this in your environment variables
+AWS_STORAGE_BUCKET_NAME = 'jpkwebsite'  # Name of your Space
+AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'  # Endpoint for your Space
+AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
 
-STATIC_URL = 'static/'
+# Static files settings
+STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/static/'  # Static files URL
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+# Media files settings
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/media/'  # Media files URL
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Local static files collection (for collectstatic command)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
 
 
 # Default primary key field type
@@ -153,9 +164,7 @@ EMAIL_USE_TLS = True  # Use TLS for secure connection
 EMAIL_HOST_USER = "jer.kuehn@gmail.com"  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = "cber rxtb rbjj wucq"  # Replace with your Gmail app password
 
-# Media file settings
-MEDIA_URL = '/media/'  # URL prefix for media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Top-level directory to store media files
+
 
 CKEDITOR_CONFIGS = {
     'default': {
