@@ -140,14 +140,17 @@ AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
 
 # Static files settings
 STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/static/'  # Static files URL
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Media files settings
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/media/'  # Media files URL
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Local static files collection (for collectstatic command)
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+if not DEBUG:  # For production
+    STATIC_ROOT = None
+else:  # For local development
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # Default primary key field type
