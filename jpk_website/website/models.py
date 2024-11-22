@@ -15,17 +15,17 @@ class BlogEntry(models.Model):
     blogPublic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Save the instance first to ensure the original file is saved
+        # Save the instance first to ensure the file is uploaded
         super().save(*args, **kwargs)
 
-        # Proceed only if a valid image is uploaded
         if self.blogPhoto and self.blogPhoto.name:
             from PIL import Image
             from io import BytesIO
             from django.core.files.base import ContentFile
 
-            # Open the saved image
-            img = Image.open(self.blogPhoto.path)
+            # Open the file directly from storage
+            file_obj = self.blogPhoto.file
+            img = Image.open(file_obj)
 
             # Check and resize the image if needed
             if img.height > 1080:
@@ -46,7 +46,7 @@ class BlogEntry(models.Model):
                 self.blogPhoto.delete(save=False)  # Delete the original file
                 self.blogPhoto.save(self.blogPhoto.name, ContentFile(buffer.read()), save=False)
 
-        # Save the instance again to update any changes to the file field
+        # Save the instance again to update any changes
         super().save(*args, **kwargs)
 
 
