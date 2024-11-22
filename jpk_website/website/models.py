@@ -15,18 +15,19 @@ class BlogEntry(models.Model):
     blogPublic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Save the instance first to ensure the file is available
+        # Save the instance first to ensure the original file is saved
         super().save(*args, **kwargs)
 
-        if self.blogPhoto:
+        # Proceed only if a valid image is uploaded
+        if self.blogPhoto and self.blogPhoto.name:
             from PIL import Image
             from io import BytesIO
             from django.core.files.base import ContentFile
 
-            # Open the uploaded image
-            img = Image.open(self.blogPhoto)
+            # Open the saved image
+            img = Image.open(self.blogPhoto.path)
 
-            # Resize only if the image height exceeds 1080px
+            # Check and resize the image if needed
             if img.height > 1080:
                 # Calculate the new width while maintaining aspect ratio
                 aspect_ratio = img.width / img.height
@@ -41,12 +42,13 @@ class BlogEntry(models.Model):
                 img.save(buffer, format='JPEG')
                 buffer.seek(0)
 
-                # Replace the original file with the resized image
+                # Replace the original file with the resized version
                 self.blogPhoto.delete(save=False)  # Delete the original file
                 self.blogPhoto.save(self.blogPhoto.name, ContentFile(buffer.read()), save=False)
 
-        # Save the instance again after processing the image
+        # Save the instance again to update any changes to the file field
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         """
