@@ -131,28 +131,45 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
-# DigitalOcean Spaces settings
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # Your access key
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # Your secret key
-AWS_STORAGE_BUCKET_NAME = 'jpkwebsite'  # Name of your Space
-AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'  # Your Space's endpoint
+# DigitalOcean Spaces credentials and configuration
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'jpkwebsite')
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL', 'https://nyc3.digitaloceanspaces.com')
 AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL = 'public-read'
 
-# Static files settings
-STATIC_URL = '/static/'
-# Media files settings
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.cdn.digitaloceanspaces.com/media/'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Static and media files settings
+MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.cdn.digitaloceanspaces.com/media/"
+STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.cdn.digitaloceanspaces.com/static/"
 
+# Storages configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "endpoint_url": AWS_S3_ENDPOINT_URL,
+            "default_acl": "public-read",
+            "location": "media",  # Subfolder for media files
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+        "OPTIONS": {
+            "access_key": AWS_ACCESS_KEY_ID,
+            "secret_key": AWS_SECRET_ACCESS_KEY,
+            "bucket_name": AWS_STORAGE_BUCKET_NAME,
+            "endpoint_url": AWS_S3_ENDPOINT_URL,
+            "default_acl": "public-read",
+            "location": "static",  # Subfolder for static files
+        },
+    },
+}
+
+# Static files root for collectstatic command
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
