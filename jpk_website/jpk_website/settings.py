@@ -145,7 +145,7 @@ AWS_DEFAULT_ACL = 'public-read'
 # Static files settings
 STATIC_URL = '/static/'
 # Media files settings
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/media/'
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.cdn.digitaloceanspaces.com/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
