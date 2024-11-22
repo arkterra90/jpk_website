@@ -139,23 +139,17 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # Your secret key
 AWS_STORAGE_BUCKET_NAME = 'jpkwebsite'  # Name of your Space
 AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'  # Your Space's endpoint
 AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
-AWS_LOCATION = 'staticfiles'
+AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'public-read'
 
 # Static files settings
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/static/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
+STATIC_URL = '/static/'
 # Media files settings
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-IS_DEPLOYMENT = os.getenv("IS_DEPLOYMENT", "False") == "True"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-if IS_DEPLOYMENT:
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-else:
-    STATIC_ROOT = None
 
 
 
