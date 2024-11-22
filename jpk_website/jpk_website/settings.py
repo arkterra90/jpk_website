@@ -40,6 +40,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split("
 # Application definition
 
 INSTALLED_APPS = [
+    'storages',
     'ckeditor',
     'django_distill',
     'website',
@@ -136,7 +137,7 @@ if IS_DEPLOYMENT:
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 else:
     STATIC_ROOT = None
-    
+
 # DigitalOcean Spaces settings
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # Your access key
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # Your secret key
