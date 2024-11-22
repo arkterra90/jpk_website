@@ -15,10 +15,9 @@ class BlogEntry(models.Model):
     blogPublic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Call the parent class's save method first to handle initial saving
+        # Save the instance first to ensure the file is available
         super().save(*args, **kwargs)
 
-        # Check if there's a photo and process it
         if self.blogPhoto:
             from PIL import Image
             from io import BytesIO
@@ -27,7 +26,7 @@ class BlogEntry(models.Model):
             # Open the uploaded image
             img = Image.open(self.blogPhoto)
 
-            # Check if the image height exceeds 1080px
+            # Resize only if the image height exceeds 1080px
             if img.height > 1080:
                 # Calculate the new width while maintaining aspect ratio
                 aspect_ratio = img.width / img.height
@@ -42,9 +41,12 @@ class BlogEntry(models.Model):
                 img.save(buffer, format='JPEG')
                 buffer.seek(0)
 
-                # Save the resized image back to the `blogPhoto` field
+                # Replace the original file with the resized image
+                self.blogPhoto.delete(save=False)  # Delete the original file
                 self.blogPhoto.save(self.blogPhoto.name, ContentFile(buffer.read()), save=False)
 
+        # Save the instance again after processing the image
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """
@@ -52,6 +54,7 @@ class BlogEntry(models.Model):
         Shows a brief summary including the date, author, title, and tags.
         """
         return f"{self.blogDate} {self.blogAuthor} {self.blogTitle} {self.blogTag}"
+
 
 # Model representing a subscriber to the blog or newsletter
 class Subscriber(models.Model):
