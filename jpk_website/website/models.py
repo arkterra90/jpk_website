@@ -15,16 +15,23 @@ class BlogEntry(models.Model):
     blogPublic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        import os
+        from PIL import Image
+        from io import BytesIO
+        from django.core.files.base import ContentFile
+
+        # Check if the blogPhoto field is being cleared
+        if self.pk:  # Only check for existing instances
+            old_instance = BlogEntry.objects.filter(pk=self.pk).first()
+            if old_instance and old_instance.blogPhoto and not self.blogPhoto:
+                # Delete the old file if the field is cleared
+                old_instance.blogPhoto.delete(save=False)
+
         # Save the instance to ensure the file is uploaded
         super().save(*args, **kwargs)
 
         # Proceed only if a valid image is uploaded
         if self.blogPhoto and self.blogPhoto.name:
-            from PIL import Image
-            from io import BytesIO
-            from django.core.files.base import ContentFile
-            import os
-
             # Open the file directly from storage
             file_obj = self.blogPhoto.file
             img = Image.open(file_obj)
@@ -53,6 +60,13 @@ class BlogEntry(models.Model):
 
         # Save the instance again to update any changes
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # Delete the associated file when the instance is deleted
+        if self.blogPhoto:
+            self.blogPhoto.delete(save=False)
+        super().delete(*args, **kwargs)
+
 
 
 
