@@ -23,6 +23,7 @@ class BlogEntry(models.Model):
             from PIL import Image
             from io import BytesIO
             from django.core.files.base import ContentFile
+            import os
 
             # Open the file directly from storage
             file_obj = self.blogPhoto.file
@@ -43,15 +44,16 @@ class BlogEntry(models.Model):
                 img.save(buffer, format='JPEG')
                 buffer.seek(0)
 
-                # Generate a valid filename if not present
-                filename = self.blogPhoto.name or f"{self.pk}_resized.jpg"
+                # Extract the base filename without any directories
+                base_filename = os.path.basename(self.blogPhoto.name)
 
                 # Replace the original file with the resized version
                 self.blogPhoto.delete(save=False)  # Delete the original file
-                self.blogPhoto.save(filename, ContentFile(buffer.read()), save=False)
+                self.blogPhoto.save(base_filename, ContentFile(buffer.read()), save=False)
 
         # Save the instance again to update any changes
         super().save(*args, **kwargs)
+
 
 
 
