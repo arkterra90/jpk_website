@@ -15,9 +15,10 @@ class BlogEntry(models.Model):
     blogPublic = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Save the instance first to ensure the file is uploaded
+        # Save the instance to ensure the file is uploaded
         super().save(*args, **kwargs)
 
+        # Proceed only if a valid image is uploaded
         if self.blogPhoto and self.blogPhoto.name:
             from PIL import Image
             from io import BytesIO
@@ -42,12 +43,16 @@ class BlogEntry(models.Model):
                 img.save(buffer, format='JPEG')
                 buffer.seek(0)
 
+                # Generate a valid filename if not present
+                filename = self.blogPhoto.name or f"{self.pk}_resized.jpg"
+
                 # Replace the original file with the resized version
                 self.blogPhoto.delete(save=False)  # Delete the original file
-                self.blogPhoto.save(self.blogPhoto.name, ContentFile(buffer.read()), save=False)
+                self.blogPhoto.save(filename, ContentFile(buffer.read()), save=False)
 
         # Save the instance again to update any changes
         super().save(*args, **kwargs)
+
 
 
     def __str__(self):
