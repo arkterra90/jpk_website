@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from django.core.management.utils import get_random_secret_key
-import sys
-import dj_database_url
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,24 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
+SECRET_KEY = 'django-insecure-l3%qubkvgo(w*i@fa29#3-b5%))$(1(8k4$_uv_f*fy#uvvy=l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
-#DEBUG = True
+DEBUG = True
 
-#Digital Ocean Var for knowing when to connect to postGre DB
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
-
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'storages',
     'ckeditor',
-    'django_distill',
+    'storages',
     'website',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -86,19 +77,12 @@ WSGI_APPLICATION = 'jpk_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if DEVELOPMENT_MODE is True:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv("DATABASE_URL", None) is None:
-        raise Exception("DATABASE_URL environment variable not defined")
-    DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
-    }
+}
 
 
 # Password validation
@@ -131,30 +115,32 @@ USE_I18N = True
 
 USE_TZ = True
 
-IS_DEPLOYMENT = os.getenv("IS_DEPLOYMENT", "False") == "True"
 
-if IS_DEPLOYMENT:
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-else:
-    STATIC_ROOT = None
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 # DigitalOcean Spaces settings
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')  # Your access key
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')  # Your secret key
+AWS_ACCESS_KEY_ID = 'DO00CZWHWPZG68ZE27NG'  # Your access key
+AWS_SECRET_ACCESS_KEY = '5T4DwghS3jXTZaDUgE+sLbHqKrPFw9VOKCJBF2gEvqM'  # Your secret key
 AWS_STORAGE_BUCKET_NAME = 'jpkwebsite'  # Name of your Space
 AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'  # Your Space's endpoint
 AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
+AWS_LOCATION = 'static'
+AWS_DEFAULT_ACL = 'public-read'
 
 # Static files settings
-STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/static/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+CDN_URL = 'https://jpkwebsite.nyc3.cdn.digitaloceanspaces.com/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+STATIC_URL = f'{CDN_URL}/static/'
 
-# Media files settings
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com/media/'
+# Media files (uploads)
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'{CDN_URL}/media/'
 
-
-
+# Optional: Other static file settings
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Local static directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
@@ -173,7 +159,9 @@ EMAIL_USE_TLS = True  # Use TLS for secure connection
 EMAIL_HOST_USER = "jer.kuehn@gmail.com"  # Replace with your Gmail address
 EMAIL_HOST_PASSWORD = "cber rxtb rbjj wucq"  # Replace with your Gmail app password
 
-
+# Media file settings
+MEDIA_URL = '/media/'  # URL prefix for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Top-level directory to store media files
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -182,3 +170,17 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
+
+import boto3
+
+session = boto3.Session(
+    aws_access_key_id='DO00CZWHWPZG68ZE27NG',
+    aws_secret_access_key='5T4DwghS3jXTZaDUgE+sLbHqKrPFw9VOKCJBF2gEvqM',
+)
+s3 = session.resource('s3', endpoint_url='https://nyc3.digitaloceanspaces.com')
+bucket = s3.Bucket('jpkwebsite')
+
+# Test uploading a file
+bucket.upload_file('staticfiles/css/styles.css', 'static/styles.css')
+
+print("Uploaded successfully!")
