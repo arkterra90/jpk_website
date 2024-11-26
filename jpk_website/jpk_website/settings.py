@@ -34,8 +34,14 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 #Digital Ocean Var for knowing when to connect to postGre DB
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+#ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+DJANGO_ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
+# Add 'www.jeremykuehn.com' to the allowed hosts
+DJANGO_ALLOWED_HOSTS.append('jeremykuehn.com')
+
+# Update ALLOWED_HOSTS with DJANGO_ALLOWED_HOSTS
+ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
 
 # Application definition
 
