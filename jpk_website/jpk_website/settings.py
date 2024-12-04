@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'ckeditor',
-    'storages',
+    'django_distill',
     'website',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -119,29 +119,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-# DigitalOcean Spaces settings
-AWS_ACCESS_KEY_ID = 'DO00CZWHWPZG68ZE27NG'  # Your access key
-AWS_SECRET_ACCESS_KEY = '5T4DwghS3jXTZaDUgE+sLbHqKrPFw9VOKCJBF2gEvqM'  # Your secret key
-AWS_STORAGE_BUCKET_NAME = 'jpkwebsite'  # Name of your Space
-AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'  # Your Space's endpoint
-AWS_QUERYSTRING_AUTH = False  # Optional: Makes URLs cleaner for public files
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL = 'public-read'
-
-# Static files settings
-CDN_URL = 'https://jpkwebsite.nyc3.cdn.digitaloceanspaces.com/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-STATIC_URL = f'{CDN_URL}/static/'
-
-# Media files (uploads)
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'{CDN_URL}/media/'
-
-# Optional: Other static file settings
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Local static directory
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # Default primary key field type
@@ -170,17 +149,3 @@ CKEDITOR_CONFIGS = {
         'width': '100%',
     },
 }
-
-import boto3
-
-session = boto3.Session(
-    aws_access_key_id='DO00CZWHWPZG68ZE27NG',
-    aws_secret_access_key='5T4DwghS3jXTZaDUgE+sLbHqKrPFw9VOKCJBF2gEvqM',
-)
-s3 = session.resource('s3', endpoint_url='https://nyc3.digitaloceanspaces.com')
-bucket = s3.Bucket('jpkwebsite')
-
-# Test uploading a file
-bucket.upload_file('staticfiles/css/styles.css', 'static/styles.css')
-
-print("Uploaded successfully!")
